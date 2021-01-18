@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "api.path",
+      "type": "java.lang.String",
+      "description": "기본 API path 입니다.."
+    }
+  ] }

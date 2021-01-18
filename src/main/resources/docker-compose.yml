@@ -1,0 +1,21 @@
+version: "3.8" # docker-compose version
+
+volumes: # volumes : 저장 공간의 이름 설정
+  db-data:
+    external: false
+
+
+services:
+  mysql_8: # 실행할 service 명(compose로 실행 시 디렉토리 이름+지정한 이름이 합쳐져서 container 이름이 된다.)
+    image: mysql          #실행할 이미지 및 버전
+    container_name: maple
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci        # DB engine characterset
+    environment:
+      TZ: "Asia/Seoul"           # time-zone 설정 : 없는 경우 defualt-UTC
+      MYSQL_ROOT_PASSWORD: passw0rd # mysql root계정의 비밀번호
+    ports:
+      - "3307:3306"            #container의 외부포트/내부포트 설정 db연결시 이때 설정한 외부포트를 통하여 connection 가능
+    volumes:
+      - db-data:/var/lib/mysql   # 데이터를 저장할 저장공간의 경로(설정하지 않는 경우 container 재부팅 시 데이터가 사라진다.)
