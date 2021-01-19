@@ -1,31 +1,45 @@
 package org.yj.maple.web.service;
 
+import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
-import org.yj.maple.web.domain.User;
-import org.yj.maple.web.domain.UsersRepository;
-import org.yj.maple.web.dto.UserDto;
-import org.yj.maple.web.mapper.UserMapper;
+import org.yj.maple.web.domain.users.Users;
+import org.yj.maple.web.domain.users.UsersRepository;
+import org.yj.maple.web.dto.UsersDto;
+import org.yj.maple.web.mapper.UsersMapper;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class UsersService {
 
-    private UsersRepository usersRepository;
-    private UserMapper userMapper;
+    private final UsersRepository usersRepository;
+    private UsersMapper usersMapper;
 
     //단 한번만 초기화할 것
     @PostConstruct
     public void init(){
-        UserMapper instance = Mappers.getMapper(UserMapper.class);
+        this.usersMapper = Mappers.getMapper(UsersMapper.class);
     }
 
+    @Transactional
+    public void register(UsersDto usersDto){
+        Users users = usersDto.toEntity(usersDto);
+        usersRepository.save(users);
+    }
 
-    public void register(UserDto userDto){
+    public UsersDto getOne(Long id){
+        Users users = usersRepository.getOne(id);
+        return usersMapper.toDto(users);
+    }
 
-        User user = userMapper.toUser(userDto);
-
-        usersRepository.save(user);
+    @Transactional
+    public UsersDto deactivate(Long id){
+        Users users = usersRepository.getOne(id);
+        users.deactivate();
+        UsersDto usersDto = usersMapper.toDto(users);
+        return usersDto;
     }
 }
