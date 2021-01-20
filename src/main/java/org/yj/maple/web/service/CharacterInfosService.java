@@ -21,7 +21,7 @@ public class CharacterInfosService {
 
     @PostConstruct
     public void init(){
-        CharacterInfosMapper instance = Mappers.getMapper(CharacterInfosMapper.class);
+        characterInfosMapper = Mappers.getMapper(CharacterInfosMapper.class);
     }
 
     public void register(CharacterInfosDto characterInfosDto){
